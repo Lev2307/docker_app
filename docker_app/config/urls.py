@@ -15,7 +15,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from clients.views import View, CreateFL
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', View.as_view(), name="index"),
+    path('/create/', CreateFL.as_view(), name="create")
+
 ]
