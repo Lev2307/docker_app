@@ -1,10 +1,10 @@
 from django import forms
-from .models import FLname
+from .models import Firstlastname
 
 
-class FLnameForm(forms.ModelForm):
+class FirstlastnameForm(forms.ModelForm):
     class Meta:
-        model = FLname
+        model = Firstlastname
         fields = ['first_name', 'last_name']
 
     def save(self, commit=True):
