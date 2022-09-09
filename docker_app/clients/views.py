@@ -4,7 +4,6 @@ from django.views.generic import ListView
 from django.views.generic import CreateView
 from .models import FLname
 from .forms import FLnameForm
-
 # Create your views here.
 class View(ListView):
     model = FLname
@@ -15,6 +14,7 @@ class View(ListView):
         context = super().get_context_data(**kwargs)
         context['form'] = FLnameForm()         
         return context
+
 
 class CreateFL(CreateView):
     model = FLname
