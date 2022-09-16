@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  web:
+    build: ./docker_app
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./docker_app/:/app/
+    ports:
+      - 8000:8000
+    environment:
+      - DEBUG=1
+      - SECRET_KEY=django-insecure-dqi8)qqrm1o9#rose&cd$$yx5$$e=+697o22$$6gqi=gtl&k%^q7z
+      - DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]
+    depends_on:
+      - redis
+  redis:
+    image: redis:alpine
+  celery:
+    build: ./docker_app
+    command: celery -A config worker -l info
+    volumes:
+      - ./docker_app/:/app/
+    environment:
+      - DEBUG=1
+      - SECRET_KEY=django-insecure-dqi8)qqrm1o9#rose&cd$$yx5$$e=+697o22$$6gqi=gtl&k%^q7z
+      - DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]    
+    depends_on:
+      - redis
+  celery-beat:
+    build: ./docker_app
+    command: celery -A config -l info
+    volumes: 
+      - ./docker_app/:/app/
+    environment:
+      - DEBUG=1
+      - SECRET_KEY=django-insecure-dqi8)qqrm1o9#rose&cd$$yx5$$e=+697o22$$6gqi=gtl&k%^q7z
+      - DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]    
+    depends_on:
+      - redis

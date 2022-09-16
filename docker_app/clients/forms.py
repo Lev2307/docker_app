@@ -1,5 +1,6 @@
 from django import forms
 from .models import Firstlastname
+from .tasks import mr_save_task
 
 
 class FirstlastnameForm(forms.ModelForm):
@@ -7,25 +8,13 @@ class FirstlastnameForm(forms.ModelForm):
         model = Firstlastname
         fields = ['first_name', 'last_name']
 
+    def mr_save(self):
+        return mr_save_task.delay(self.cleaned_data['first_name'])
+
     def save(self, commit=True):
         res = super().save(commit=True)
-        def check_mr_start(string):
-            if not string.startswith('mr.'):
-                return True
-            return False
-        def check_mr_end(string):
-            if string.endswith('mr.'):
-                return True
-            return False
-        
-        fname = self.cleaned_data.get('first_name')
-        fname = fname.lower()
-        new_fname = ''
-        if check_mr_start(fname) == True:
-            new_fname = 'Mr.' + ' ' + fname
-        if check_mr_end(fname) == True:
-            fname = fname.replace('mr.', '')
-            new_fname = 'Mr.' + ' ' + fname
+        new_fname = self.mr_save()
+        print(new_fname)
         res.first_name = new_fname
         res.save()
         return res

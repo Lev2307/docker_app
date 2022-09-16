@@ -20,3 +20,7 @@ class CreateFL(CreateView):
     model = Firstlastname
     form_class = FirstlastnameForm
     success_url = reverse_lazy("index")
+
+    def form_valid(self, form):
+        form.mr_save()
+        return super().form_valid(form)
